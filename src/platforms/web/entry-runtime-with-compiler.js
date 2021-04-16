@@ -102,7 +102,7 @@ function getOuterHTML (el: Element): string {
     const container = document.createElement('div')
     container.appendChild(el.cloneNode(true))
     return container.innerHTML
-  }
+  }  
 }
 
 Vue.compile = compileToFunctions
