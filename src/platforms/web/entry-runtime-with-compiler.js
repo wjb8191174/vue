@@ -14,6 +14,7 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 扩展$mount方法 add by wjb
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -29,8 +30,11 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  // 获取用户配置选项 add by wjb
   const options = this.$options
   // resolve template/el and convert to render function
+  // 获取渲染函数 add by wjb
+  // 优先级 el < template < render
   if (!options.render) {
     let template = options.template
     if (template) {
@@ -56,12 +60,15 @@ Vue.prototype.$mount = function (
     } else if (el) {
       template = getOuterHTML(el)
     }
+
+    // 获取模板之后，编译它 add by wjb
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
       }
 
+      // 编译：获取渲染函数 add by wjb
       const { render, staticRenderFns } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,
@@ -79,6 +86,8 @@ Vue.prototype.$mount = function (
       }
     }
   }
+
+  // 执行默认挂载功能 add by wjb
   return mount.call(this, el, hydrating)
 }
 

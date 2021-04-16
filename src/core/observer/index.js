@@ -111,8 +111,11 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 获取一个Observer实例
+  // 执行过程中出现一个对象，就是创建一个Observer add by wjb
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
+    // 如果已经是一个响应式数据了，直接返回Ob add by wjb
     ob = value.__ob__
   } else if (
     shouldObserve &&
@@ -121,6 +124,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 如果是新的，创建一个新的实例 add by wjb
     ob = new Observer(value)
   }
   if (asRootData && ob) {

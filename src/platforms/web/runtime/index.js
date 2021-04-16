@@ -31,14 +31,17 @@ extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
+// 声明一个补丁函数 add by wjb
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
+// 声明$mount方法 add by wjb
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined
+  // 挂载执行 add by wjb
   return mountComponent(this, el, hydrating)
 }
 
