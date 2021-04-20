@@ -60,3 +60,56 @@ export default class Watcher {
   update () {} 
 }
 ```
+
+## vue批量异步更新策略
+
+***vue中的具体实现***
+- 异步：只要侦听到数据变化，Vue 将开启⼀个队列，并缓冲在同⼀事件循环中发⽣的所有数据变更。
+- 批量：如果同⼀个 watcher 被多次触发，只会被推⼊到队列中⼀次。去重对于避免不必要的计算和 DOM 操作是⾮常重要的。然后，在下⼀个的事件循环“tick”中，Vue 刷新队列执⾏实际⼯作。
+- 异步策略：Vue 在内部对异步队列尝试使⽤原⽣的 Promise.then 、 MutationObserver 或 setImmediate ，如果执⾏环境都不⽀持，则会采⽤ setTimeout 代替。
+
+update() core\observer\watcher.js
+- dep.notify()之后watcher执⾏更新，执⾏⼊队操作
+
+queueWatcher(watcher) core\observer\scheduler.js
+- 执行watcher入队操作
+
+nextTick(flushSchedulerQueue) core\util\next-tick.js
+- nextTick按照特定异步策略执⾏队列操作
+
+## 虚拟DOM
+
+***优点***
+- 虚拟DOM轻量、快速：当它们发⽣变化时通过新旧虚拟DOM⽐对可以得到最⼩DOM操作量，配合异步更新策略减少刷新频率，从⽽提升性能
+- 跨平台：将虚拟dom更新转换为不同运⾏时特殊操作实现跨平台
+- 兼容性：还可以加⼊兼容性代码增强操作的兼容性
+
+***必要性***
+
+vue 1.0中有细粒度的数据变化侦测，它是不需要虚拟DOM的，但是细粒度造成了⼤量开销，这对于⼤型项⽬来说是不可接受的。因此，vue 2.0选择了中等粒度的解决⽅案，每⼀个组件⼀个watcher实例，这样状态变化时只能通知到组件，再通过引⼊虚拟DOM去进⾏⽐对和渲染。
+
+***整体流程***
+
+mountComponent() core/instance/lifecycle.js
+- 渲染、更新组件
+
+```javascript
+// 定义更新函数
+const updateComponent = () => {
+  // 实际调⽤是在lifeCycleMixin中定义的_update和renderMixin中定义的_render
+  vm._update(vm._render(), hydrating) 
+}
+```
+
+\_render core/instance/render.js
+- 生成虚拟dom
+
+\_update core\instance\lifecycle.js
+- update负责更新dom，转换vnode为dom
+
+\_\_patch\_\_() platforms/web/runtime/index.js
+- \_\_patch\_\_是在平台特有代码中指定的
+
+```javascript
+Vue.prototype.__patch__ = inBrowser ? patch : noop
+```

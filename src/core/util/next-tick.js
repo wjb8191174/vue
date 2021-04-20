@@ -10,6 +10,7 @@ export let isUsingMicroTask = false
 const callbacks = []
 let pending = false
 
+// 存储用户传入的回调 add by wjb
 function flushCallbacks () {
   pending = false
   const copies = callbacks.slice(0)
@@ -84,6 +85,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// Vue的nextTick方法 add by wjb
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
   callbacks.push(() => {
@@ -99,6 +101,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 异步执行 add by wjb
     timerFunc()
   }
   // $flow-disable-line

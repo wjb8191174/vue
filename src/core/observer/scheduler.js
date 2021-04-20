@@ -85,6 +85,7 @@ function flushSchedulerQueue () {
 
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
+  // 遍历队列的所有watcher实例 add by wjb
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
     if (watcher.before) {
@@ -92,6 +93,7 @@ function flushSchedulerQueue () {
     }
     id = watcher.id
     has[id] = null
+    // 真正的更新方法是run() add by wjb
     watcher.run()
     // in dev build, check and stop circular updates.
     if (process.env.NODE_ENV !== 'production' && has[id] != null) {
@@ -162,10 +164,13 @@ function callActivatedHooks (queue) {
  * pushed when the queue is being flushed.
  */
 export function queueWatcher (watcher: Watcher) {
+  // 获取watcher唯一的ID add by wjb
   const id = watcher.id
+  // 判断是否已入队，去重 add by wjb
   if (has[id] == null) {
     has[id] = true
     if (!flushing) {
+      // 入队 add by wjb
       queue.push(watcher)
     } else {
       // if already flushing, splice the watcher based on its id
@@ -184,6 +189,8 @@ export function queueWatcher (watcher: Watcher) {
         flushSchedulerQueue()
         return
       }
+
+      //异步刷线队列 add by wjb
       nextTick(flushSchedulerQueue)
     }
   }

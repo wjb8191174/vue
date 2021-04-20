@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
+
 <body>
-    <div id="app">
-        <h1>数据响应式</h1>
-        <p></p>
-    </div>
+  <div id="app">
+    <h1>数据响应式</h1>
+    <p>{{obj.foo}}</p>
+  </div>
 </body>
 <script src="../../dist/vue.js"></script>
 <script>
-    const app = new App({
-        el: "#app",
-        data:{
-            obj: {
-                foo: 'foo'
-            }
-        },
-        mounted () {
-            setTimeout(() => {
-                this.obj = {foo:'ffff'}
-                this.$set(this.obj, 'bar', 'barrrr')
-                this.obj.foo = 'fooooo'
-            }, 1000);;
-        },
-    })
+  const app = new App({
+    el: "#app",
+    data: {
+      obj: {
+        foo: 'foo'
+      }
+    },
+    mounted() {  
+      setTimeout(() => {
+        this.obj = { foo: 'ffff' }
+        this.$set(this.obj, 'bar', 'barrrr')
+        this.obj.foo = 'fooooo'
+      }, 1000);
+    },
+  })
 </script>
+
 </html>
