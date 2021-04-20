@@ -113,3 +113,7 @@ const updateComponent = () => {
 ```javascript
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 ```
+
+***patch获取***
+
+patch是createPatchFunction的返回值，传递nodeOps和modules是web平台特别实现
